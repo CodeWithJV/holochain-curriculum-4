@@ -1,0 +1,18 @@
+---
+manifest_version: '1'
+name: c-4
+description: ~
+roles:
+  - name: chatroom
+    provisioning:
+      strategy: create
+      deferred: false
+    dna:
+      bundled: '../dnas/chatroom/workdir/chatroom.dna'
+      modifiers:
+        network_seed: ~
+        properties: ~
+        origin_time: ~
+        quantum_time: ~
+      installed_hash: ~
+      clone_limit: 0
