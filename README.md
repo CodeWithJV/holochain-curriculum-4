@@ -102,9 +102,9 @@ After each scaffold, you should read through the generated content to more deepl
 #### 7. Run `hc scaffold link-type`
 
 - Link from which entry type? `Agent`
-- Reference this entry type with its entry hash or its action hash? `ActionHash`
-- Link to which entry type? `Room`
 - Which role does this agent play in the relationship? `member`
+- Link to which entry type? `Room`
+- Reference this entry type with its entry hash or its action hash? `ActionHash`
 - Should the link be bidirectional? `y`
   - Choosing `y` for this option creates two links. One from each Member Agent to each Room, and one from each Room to each Member. We want this because these entries have a [many to many relationship](<https://en.wikipedia.org/wiki/Many-to-many_(data_model)>) (One room can have many members, one member can be apart of many rooms)
 - Can the link be deleted? `n`
@@ -127,7 +127,7 @@ This is where the failing zome call, `get_not_joined_rooms_for_member` is coming
 
 <details>
 <summary>
-Hint #1 - Breakdown of each step
+Hint - Breakdown of each step
 </summary>
 
 ```rust
@@ -141,31 +141,6 @@ pub fn get_not_joined_rooms_for_member(member: AgentPubKey) -> ExternResult<Vec<
     // Filter the vector of all rooms to only contain items that don't already exist in the joined rooms vector
 
     // Return the vector
-}
-```
-
-</details>
-
-<details>
-<summary>
-Hint #2 - Breakdown of the code
-</summary>
-
-```rust
-#[hdk_extern]
-pub fn get_not_joined_rooms_for_member(member: AgentPubKey) -> ExternResult<Vec<Link>> {
-    let path = Path::from("all_rooms");
-    let all_rooms = get_links(path.path_entry_hash()?, LinkTypes::AllRooms, None)?;
-    let joined_rooms = get_links(member, LinkTypes::MemberToRooms, None)?;
-    let joined_rooms_set: HashSet<_> = joined_rooms
-        .into_iter()
-        .map(|r| r.target)
-        .collect();
-    let not_joined_rooms = all_rooms
-        .into_iter()
-        .filter(|room| !joined_rooms_set.contains(&room.target))
-        .collect::<Vec<_>>();
-    Ok(not_joined_rooms)
 }
 ```
 
@@ -188,18 +163,6 @@ Don't forget to Press `F5` or `Ctrl + R` to reload the window!
 
 This means that when an agent creates a new room, they will also 'join' it as a member.
 
-<details>
-<summary>
-Hint
-</summary>
-
-```rust
-create_link(room.creator.clone(), room_hash.clone(), LinkTypes::MemberToRooms, ())?;
-create_link(room_hash.clone(), room.creator.clone(), LinkTypes::RoomToMembers, ())?;
-```
-
-</details>
-
 ## Sending and receiving remote signals from other Agents
 
 In our app we can create chatrooms, join them, and send messages to other Agents inside them. However every time a chatroom is created or a new message is sent, we have to manually refresh the window to view the new changes.
@@ -218,7 +181,7 @@ The code should be along the lines of this:
 
 ```rust
 
- Action::Create(_create) => {
+Action::Create(_create) => {
     if let Ok(Some(app_entry)) = get_entry_for_action(&action.hashed.hash) {
         let new_signal = Signal::EntryCreated {
             app_entry: app_entry.clone(),
@@ -228,18 +191,18 @@ The code should be along the lines of this:
 
         // If the create action's entry is of type Message
 
-            // Get the entry off the create action
+        // Get the entry off the create action
 
-            // Get the room hash from the entry
+        // Get the room hash from the entry
 
-            // call get_members_for_room() to get the members for the room using the room hash
+        // call get_members_for_room() to get the members for the room using the room hash
 
-            // Filter the members vector to exclude our agent pubkey (we don't want to send a remote signal to ourself)
+        // Filter the members vector to exclude our agent pubkey (we don't want to send a remote signal to ourself)
 
-            // remote_signal(new_signal, members)
-        }
+        // remote_signal(new_signal, members)
     }
     Ok(())
+}
 
 ```
 
@@ -289,7 +252,7 @@ Action::Create(_create) => {
                 .filter(|agent| *agent != agent_info().unwrap().agent_latest_pubkey)
                 .collect();
 
-            let _ = remote_signal(new_signal, members);
+            let _ = send_remote_signal(new_signal, members);
         }
     }
     Ok(())
@@ -311,7 +274,7 @@ fn recv_remote_signal(signal: Signal) -> ExternResult<()> {
 
 This function will receive the remote signal from the network and forward it to the client's frontend
 
-#### 3. Replace the current `init` function inside `coordinator/chatroom/src/lib.rs` with the following code
+#### 3. Replace the current `init` function inside `coordinator/chatroom/src/lib.rs` with the following code.
 
 To allow other agents on the network to directly call the `recv_remote_signal` function, we need to give them access with a Capibility Grant. We will cover this more in depth in a future challenge.
 
