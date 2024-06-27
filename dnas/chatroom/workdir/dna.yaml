@@ -1,0 +1,21 @@
+---
+manifest_version: "1"
+name: chatroom
+integrity:
+  network_seed: ~
+  properties: ~
+  origin_time: 1718768418383840
+  zomes:
+    - name: chatroom_integrity
+      hash: ~
+      bundled: "../../../target/wasm32-unknown-unknown/release/chatroom_integrity.wasm"
+      dependencies: ~
+      dylib: ~
+coordinator:
+  zomes:
+    - name: chatroom
+      hash: ~
+      bundled: "../../../target/wasm32-unknown-unknown/release/chatroom.wasm"
+      dependencies:
+        - name: chatroom_integrity
+      dylib: ~
