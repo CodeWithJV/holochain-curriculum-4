@@ -81,27 +81,25 @@
 <mwc-snackbar bind:this={errorSnackbar} leading> </mwc-snackbar>
 
 {#if loading}
-  <div
-    style="display: flex; flex: 1; align-items: center; justify-content: center"
-  >
-    <mwc-circular-progress indeterminate></mwc-circular-progress>
-  </div>
+  <mwc-circular-progress indeterminate></mwc-circular-progress>
 {:else if error}
-  <span>Error fetching the message: {error.data}</span>
+  <span>Error fetching the message: {error}</span>
 {:else if messageCreator === myPubKey}
   <div
-    style="display: flex; flex-direction: row; padding:10px; background-color: #c2a5d0; border-radius: 10px;  width: min-content; margin-left: auto;"
+    style="text-align: start; display: flex; flex-direction: row; padding:10px; background-color: #c2a5d0; border-radius: 10px; width: 100%; max-width: 40%; margin-left: auto;"
   >
     <span style="margin-right: 4px"><strong>You:</strong></span>
     <span style="white-space: pre-line">{message?.content}</span>
   </div>
 {:else}
   <div
-    style="display: flex; flex-direction: row; padding:10px; background-color: #d4bbff; border-radius: 10px;  width: min-content;"
+    style="display: flex; flex-direction: row; padding:10px; background-color: #d4bbff; border-radius: 10px; width: 100%; max-width: 40%;"
   >
     <span style="margin-right: 4px"
       ><strong>{messageCreatorSliced}:</strong></span
     >
-    <span style="white-space: pre-line">{message?.content}</span>
+    <span style="white-space: pre-line; text-align: start;"
+      >{message?.content}</span
+    >
   </div>
 {/if}

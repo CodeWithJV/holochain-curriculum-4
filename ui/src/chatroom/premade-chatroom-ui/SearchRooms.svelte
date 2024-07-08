@@ -18,7 +18,9 @@
   $: hashes, loading, error
 
   onMount(async () => {
-    await fetchRooms()
+    setTimeout(async () => {
+      await fetchRooms()
+    }, 300)
     client.on('signal', (signal) => {
       if (signal.zome_name !== 'chatroom') return
       const payload = signal.payload as ChatroomSignal
@@ -45,15 +47,20 @@
   }
 </script>
 
-<h1>Avaliable Chat Rooms</h1>
+<CreateRoom
+  creator={client.myPubKey}
+  on:room-created={(e) =>
+    dispatch('room-created', { roomHash: e.detail.roomHash })}
+/>
+
+<h3 style="margin-top: 32px;">Avaliable Chat Rooms</h3>
 {#if loading}
-  <div
-    style="display: flex; flex: 1; align-items: center; justify-content: center"
-  >
-    <mwc-circular-progress indeterminate></mwc-circular-progress>
-  </div>
+  <mwc-circular-progress
+    indeterminate
+    style="margin-left: auto; margin-right: auto;"
+  ></mwc-circular-progress>
 {:else if error}
-  <span>Error fetching the rooms: {error.data}.</span>
+  <span>Error fetching the rooms: {error}.</span>
 {:else if hashes.length === 0}
   <span>No rooms found.</span>
 {:else}
@@ -69,8 +76,3 @@
     {/each}
   </div>
 {/if}
-<CreateRoom
-  creator={client.myPubKey}
-  on:room-created={(e) =>
-    dispatch('room-created', { roomHash: e.detail.roomHash })}
-/>
