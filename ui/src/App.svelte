@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Banner from './Banner.svelte'
   import { onMount, setContext } from 'svelte'
   import type { ActionHash, AppClient } from '@holochain/client'
   import { AppWebsocket } from '@holochain/client'
@@ -39,35 +40,30 @@
   }
 </script>
 
-<main style="text-align: center;">
-  <div style="display: flex; flex-direction: column-reverse; height: 100vh;">
+<Banner challengeName={'Scaffolding & Signals'} challengeNumber={4}>
+  <div
+    style="display: flex; flex-direction: column-reverse; height: 100%; justify-content: center;"
+  >
     <NavBar setpage={(p) => (page = p)} {page} />
     <div
-      style="display: flex; justify-content: center; align-items: center; height: 100%;"
+      style="height: 100%; display: flex; justify-content: center; flex-direction: column; "
     >
-      {#if loading}
-        <div
-          style="display: flex; flex: 1; align-items: center; justify-content: center;"
-        >
+      <div
+        style="max-width: 600px; margin: 0 auto; justify-content: center; align-items: center;"
+      >
+        {#if loading}
           <mwc-circular-progress indeterminate />
-        </div>
-      {:else}
-        <div
-          id="content"
-          style="max-width: 400px; margin-left: auto; margin-right: auto; display: flex; flex-direction: column; flex: 1; justify-content: center; gap: 20px;"
-        >
-          {#if page === 'search'}
-            <SearchRooms
-              on:room-created={(e) => openChatRoom(e.detail.roomHash)}
-              on:room-joined={(e) => openChatRoom(e.detail.roomHash)}
-            />
-          {:else if page === 'rooms'}
-            <YourRooms {openChatRoom} />
-          {:else if page === 'conversation'}
-            <Conversation roomHash={chatRoomHash} />
-          {/if}
-        </div>
-      {/if}
+        {:else if page === 'search'}
+          <SearchRooms
+            on:room-created={(e) => openChatRoom(e.detail.roomHash)}
+            on:room-joined={(e) => openChatRoom(e.detail.roomHash)}
+          />
+        {:else if page === 'rooms'}
+          <YourRooms {openChatRoom} />
+        {:else if page === 'conversation'}
+          <Conversation roomHash={chatRoomHash} />
+        {/if}
+      </div>
     </div>
-  </div>
-</main>
+  </div></Banner
+>
