@@ -18,6 +18,7 @@
   let hashes: Array<ActionHash> | undefined
   let error: any = undefined
   let loading = true
+  let scrollContainer: HTMLDivElement
 
   $: hashes, error, loading, roomHash
   onMount(async () => {
@@ -51,6 +52,7 @@
   async function addMessage(message: ActionHash) {
     await new Promise((resolve) => setTimeout(resolve, 1000))
     hashes = [...hashes, message]
+    setTimeout(scrollToBottom, 0)
   }
 
   async function fetchMessages() {
@@ -64,10 +66,21 @@
       })
 
       hashes = links.map((l) => l.target)
+      setTimeout(scrollToBottom, 0)
     } catch (e) {
       error = e
     }
     loading = false
+  }
+
+  $: if (hashes) {
+    setTimeout(scrollToBottom, 0)
+  }
+
+  function scrollToBottom() {
+    if (scrollContainer) {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight
+    }
   }
 </script>
 
@@ -81,7 +94,10 @@
   {:else if error}
     <span>Error fetching the messages: {error}.</span>
   {:else}
-    <div style="display: flex; flex-direction: column; overflow: auto; ">
+    <div
+      bind:this={scrollContainer}
+      style="display: flex; flex-direction: column; overflow: auto; direction: ltr;"
+    >
       {#each hashes as hash}
         <div style="margin-bottom: 8px;">
           <!-- svelte-ignore missing-declaration -->
