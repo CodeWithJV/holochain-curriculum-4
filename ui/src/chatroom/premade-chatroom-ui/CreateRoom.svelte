@@ -45,35 +45,32 @@
       })
       dispatch('room-created', { roomHash: record.signed_action.hashed.hash })
     } catch (e) {
-      errorSnackbar.labelText = `Error creating the room: ${e.data}`
+      errorSnackbar.labelText = `Error creating the room: ${error}`
       errorSnackbar.show()
     }
   }
 </script>
 
 <mwc-snackbar bind:this={errorSnackbar} leading> </mwc-snackbar>
-<div style="display: flex; flex-direction: column">
-  <span style="font-size: 18px">Create Room</span>
-
-  <div style="margin-bottom: 16px">
-    <mwc-textfield
-      outlined
-      maxlength="20"
-      label="Name"
-      value={name}
-      on:input={(e) => {
-        name = e.target.value
-      }}
-      required
-    ></mwc-textfield>
-  </div>
-
-  <!-- svelte-ignore a11y-click-events-have-key-events -->
-  <mwc-button
-    style="width: 232px; margin-left: auto; margin-right: auto;"
-    raised
-    label="Create Room"
-    disabled={!isRoomValid}
-    on:click={() => createRoom()}
-  ></mwc-button>
+<h3>Create Chat Room</h3>
+<div style="margin-bottom: 16px">
+  <mwc-textfield
+    style="width: 100%;"
+    outlined
+    maxlength="20"
+    label="Name"
+    value={name}
+    on:input={(e) => {
+      name = e.target.value
+    }}
+    required
+  ></mwc-textfield>
 </div>
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<mwc-button
+  style="width: 100%; margin-left: auto; margin-right: auto;"
+  raised
+  label="Create Room"
+  disabled={!isRoomValid}
+  on:click={() => createRoom()}
+></mwc-button>

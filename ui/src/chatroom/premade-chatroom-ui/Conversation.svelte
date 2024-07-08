@@ -71,21 +71,17 @@
   }
 </script>
 
-<div>
+<div
+  style="padding: 16px; padding-top: 0; box-sizing: border-box; flex: 1; display: flex; flex-direction: column-reverse; height: 100%; max-width: 600px; width: 100%; margin-left: auto; margin-right: auto;"
+>
+  <CreateMessage {roomHash} creator={client.myPubKey} />
+  <span style="height: 32px; display: block;"></span>
   {#if loading}
-    <div
-      style="display: flex; flex: 1; align-items: center; justify-content: center"
-    >
-      <mwc-circular-progress indeterminate></mwc-circular-progress>
-    </div>
+    <mwc-circular-progress indeterminate></mwc-circular-progress>
   {:else if error}
-    <span>Error fetching the messages: {error.data}.</span>
-  {:else if hashes.length === 0}
-    <span>No Messages found.</span>
+    <span>Error fetching the messages: {error}.</span>
   {:else}
-    <div
-      style="display: flex; flex-direction: column; overflow: auto; max-height: 500px;"
-    >
+    <div style="display: flex; flex-direction: column; overflow: auto; ">
       {#each hashes as hash}
         <div style="margin-bottom: 8px;">
           <!-- svelte-ignore missing-declaration -->
@@ -96,4 +92,3 @@
     </div>
   {/if}
 </div>
-<CreateMessage {roomHash} creator={client.myPubKey} />

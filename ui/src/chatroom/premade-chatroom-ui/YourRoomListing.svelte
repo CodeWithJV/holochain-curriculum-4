@@ -68,7 +68,7 @@
     <mwc-circular-progress indeterminate></mwc-circular-progress>
   </div>
 {:else if error}
-  <span>Error fetching the room: {error.data}</span>
+  <span>Error fetching the room: {error}</span>
 {:else}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div

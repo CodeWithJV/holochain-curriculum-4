@@ -56,27 +56,23 @@
         messageHash: record.signed_action.hashed.hash,
       })
     } catch (e) {
-      errorSnackbar.labelText = `Error creating the message: ${e.data}`
+      errorSnackbar.labelText = `Error creating the message: ${error}`
       errorSnackbar.show()
     }
   }
 </script>
 
-<mwc-snackbar bind:this={errorSnackbar} leading> </mwc-snackbar>
-<div style="display: flex; flex-direction: column">
-  <span style="font-size: 18px">Create Message</span>
-
-  <div style="margin-bottom: 16px">
-    <mwc-textarea
-      outlined
-      label="Content"
-      value={content}
-      on:input={(e) => {
-        content = e.target.value
-      }}
-      required
-    ></mwc-textarea>
-  </div>
+<mwc-snackbar bind:this={errorSnackbar} leading></mwc-snackbar>
+<div style="display: flex; flex-direction: column; gap: 16px;">
+  <mwc-textarea
+    outlined
+    label="Message"
+    value={content}
+    on:input={(e) => {
+      content = e.target.value
+    }}
+    required
+  ></mwc-textarea>
 
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <mwc-button

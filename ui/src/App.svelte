@@ -41,29 +41,31 @@
 </script>
 
 <Banner challengeName={'Scaffolding & Signals'} challengeNumber={4}>
-  <div
-    style="display: flex; flex-direction: column-reverse; height: 100%; justify-content: center;"
-  >
+  <div style="display: flex; flex-direction: column-reverse; height: 100%;">
     <NavBar setpage={(p) => (page = p)} {page} />
     <div
-      style="height: 100%; display: flex; justify-content: center; flex-direction: column; "
+      style="height: calc(100% - 64px); display: flex; flex-direction: column; "
     >
-      <div
-        style="max-width: 600px; margin: 0 auto; justify-content: center; align-items: center;"
-      >
-        {#if loading}
-          <mwc-circular-progress indeterminate />
-        {:else if page === 'search'}
+      {#if loading}
+        <mwc-circular-progress indeterminate />
+      {:else if page === 'search'}
+        <div
+          style="max-width: 600px; margin: 0 auto; width: 100%; display: flex; justify-content: center; flex-direction: column; height: 100%;"
+        >
           <SearchRooms
             on:room-created={(e) => openChatRoom(e.detail.roomHash)}
             on:room-joined={(e) => openChatRoom(e.detail.roomHash)}
           />
-        {:else if page === 'rooms'}
+        </div>
+      {:else if page === 'rooms'}
+        <div
+          style="max-width: 600px; margin: 0 auto; width: 100%; display: flex; justify-content: center; flex-direction: column; height: 100%;"
+        >
           <YourRooms {openChatRoom} />
-        {:else if page === 'conversation'}
-          <Conversation roomHash={chatRoomHash} />
-        {/if}
-      </div>
+        </div>
+      {:else if page === 'conversation'}
+        <Conversation roomHash={chatRoomHash} />
+      {/if}
     </div>
-  </div></Banner
->
+  </div>
+</Banner>
