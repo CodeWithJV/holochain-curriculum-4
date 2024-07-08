@@ -336,8 +336,6 @@ RemoteMessageCreated {
 
 #### 5. Modify the `Action::Create` arm of the match statement inside `signal_action` to transmit a `RemoteMessageCreated` signal instead
 
-Note - It might be helpful to annotate your EntryTypes with `#[derive(Clone)]`!
-
 #### 6. Inside our frontend, add a new object to the `ChatroomSignal` type for `RemoteMessageCreated`
 
 #### 7. Modify the `client.on()` function to only add the incoming message hash to the hashes array if `payload.room_hash` is equal to the room hash of the current chatroom
