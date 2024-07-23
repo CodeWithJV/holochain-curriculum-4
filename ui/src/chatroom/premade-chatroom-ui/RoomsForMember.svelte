@@ -56,7 +56,7 @@
     <mwc-circular-progress indeterminate></mwc-circular-progress>
   </div>
 {:else if error}
-  <span>Error fetching rooms: {error.data}.</span>
+  <span>Error fetching rooms: {error}.</span>
 {:else if hashes.length === 0}
   <span>No rooms found for this member.</span>
 {:else}

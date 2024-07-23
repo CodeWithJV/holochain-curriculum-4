@@ -72,7 +72,7 @@
       })
       dispatch('room-joined', { roomHash: roomHash })
     } catch (e: any) {
-      errorSnackbar.labelText = `Error joining the room: ${e.data}`
+      errorSnackbar.labelText = `Error joining the room: ${error}`
       errorSnackbar.show()
     }
   }
@@ -87,7 +87,7 @@
     <mwc-circular-progress indeterminate></mwc-circular-progress>
   </div>
 {:else if error}
-  <span>Error fetching the room: {error.data}</span>
+  <span>Error fetching the room: {error}</span>
 {:else}
   <!-- svelte-ignore a11y-click-events-have-key-events -->
   <div

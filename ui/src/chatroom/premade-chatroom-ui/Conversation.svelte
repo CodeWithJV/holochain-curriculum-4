@@ -18,6 +18,7 @@
   let hashes: Array<ActionHash> | undefined
   let error: any = undefined
   let loading = true
+  let scrollContainer: HTMLDivElement
 
   $: hashes, error, loading, roomHash
   onMount(async () => {
@@ -51,6 +52,7 @@
   async function addMessage(message: ActionHash) {
     await new Promise((resolve) => setTimeout(resolve, 1000))
     hashes = [...hashes, message]
+    setTimeout(scrollToBottom, 0)
   }
 
   async function fetchMessages() {
@@ -64,27 +66,37 @@
       })
 
       hashes = links.map((l) => l.target)
+      setTimeout(scrollToBottom, 0)
     } catch (e) {
       error = e
     }
     loading = false
   }
+
+  $: if (hashes) {
+    setTimeout(scrollToBottom, 0)
+  }
+
+  function scrollToBottom() {
+    if (scrollContainer) {
+      scrollContainer.scrollTop = scrollContainer.scrollHeight
+    }
+  }
 </script>
 
-<div>
+<div
+  style="padding: 16px; padding-top: 0; box-sizing: border-box; flex: 1; display: flex; flex-direction: column-reverse; height: 100%; max-width: 600px; width: 100%; margin-left: auto; margin-right: auto;"
+>
+  <CreateMessage {roomHash} creator={client.myPubKey} />
+  <span style="height: 32px; display: block;"></span>
   {#if loading}
-    <div
-      style="display: flex; flex: 1; align-items: center; justify-content: center"
-    >
-      <mwc-circular-progress indeterminate></mwc-circular-progress>
-    </div>
+    <mwc-circular-progress indeterminate></mwc-circular-progress>
   {:else if error}
-    <span>Error fetching the messages: {error.data}.</span>
-  {:else if hashes.length === 0}
-    <span>No Messages found.</span>
+    <span>Error fetching the messages: {error}.</span>
   {:else}
     <div
-      style="display: flex; flex-direction: column; overflow: auto; max-height: 500px;"
+      bind:this={scrollContainer}
+      style="display: flex; flex-direction: column; overflow: auto; direction: ltr;"
     >
       {#each hashes as hash}
         <div style="margin-bottom: 8px;">
@@ -96,4 +108,3 @@
     </div>
   {/if}
 </div>
-<CreateMessage {roomHash} creator={client.myPubKey} />
